@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOOLS RECON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>TOOLS RECON</h1>
+
+    <div class="tool-container">
+        <h2>NMAP</h2>
+        <p>This is the nmap tool section. You can provide a description of the nmap tool and instructions for its usage here.</p>
+        <form id="nmap-form">
+            <label for="target">Target IP/Hostname:</label>
+            <input type="text" id="target" name="target" required>
+            <button type="button" class="button" onclick="runNmap()">Run nmap</button>
+        </form>
+        <!-- Display nmap results here -->
+        <div class="tool-output">
+            <h3>nmap Results:</h3>
+            <pre id="nmap-output"></pre>
+        </div>
+    </div>
+
+    <div class="tool-container">
+        <h2>WHOIS</h2>
+        <p>This is the whois tool section. You can provide a description of the whois tool and instructions for its usage here.</p>
+        <form id="whois-form">
+            <label for="domain">Domain Name:</label>
+            <input type="text" id="domain" name="domain" required>
+            <button type="button" class="button" onclick="runWhois()">Run whois</button>
+        </form>
+        <!-- Display whois results here -->
+        <div class="tool-output">
+            <h3>whois Results:</h3>
+            <pre id="whois-output"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Function to run nmap tool
+        function runNmap() {
+            const target = document.getElementById('target').value;
+            const nmapOutput = document.getElementById('nmap-output');
+
+            fetch('/run_nmap', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ target }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                nmapOutput.textContent = data;
+            });
+        }
+
+        // Function to run whois tool
+        function runWhois() {
+            const domain = document.getElementById('domain').value;
+            const whoisOutput = document.getElementById('whois-output');
+
+            fetch('/run_whois', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ domain }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                whoisOutput.textContent = data;
+            });
+        }
+
+        // Add event listener for ENTER key on the nmap target input
+        const nmapInput = document.getElementById('target');
+        nmapInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission (default action)
+                runNmap(); // Run the nmap tool function
+            }
+        });
+
+        // Add event listener for ENTER key on the whois domain input
+        const whoisInput = document.getElementById('domain');
+        whoisInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission (default action)
+                runWhois(); // Run the whois tool function
+            }
+        });
+    </script>
+</body>
+        <a href="/yoursearch"><button class="btn custom-button">YOUR DOMAIN RESULTS</button></a>
+</html>
